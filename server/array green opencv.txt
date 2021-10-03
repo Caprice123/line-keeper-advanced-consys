@@ -1,0 +1,19 @@
+0 0 70
+45 - 120 255 255
+
+
+after denoise
+13 0 64
+112 255 255q
+
+after denoise and blur
+15 0 64	
+111 255 255
+
+
+
+hough line param
+0 
+80
+60
+
