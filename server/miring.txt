@@ -1,0 +1,9 @@
+no de noise
+no blur
+0 25 58
+73 255 168
+
+no blur
+0 20 54
+72 255 168
+

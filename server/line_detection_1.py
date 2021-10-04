@@ -1,9 +1,12 @@
 import cv2
 import utils
 import numpy as np
+import math
+import os
+print(os.getcwd())
 
 
-image = cv2.imread("img_reg_lurus.jpg")
+image = cv2.imread("server/esp32_imgs/image_miring.jpg")
 print(image)
 def increase_brightness(img, value=100):
     hsv = cv2.cvtColor(img, cv2.COLOR_BGR2HSV)
@@ -22,8 +25,8 @@ def convert_to_HSV(img):
     return hsv
 
 def filter_color(img):
-    lower_color = np.array([15, 0, 64], np.uint8)
-    upper_color = np.array([111, 255, 255], np.uint8)
+    lower_color = np.array([0, 25 , 58], np.uint8)
+    upper_color = np.array([72, 255, 168], np.uint8)
     mask = cv2.inRange(img, lower_color, upper_color)
     return mask
 
@@ -126,10 +129,56 @@ def display_lines(img, lines, line_color = (0,255,0), line_width=5):
     return line_image
 
 
+
+def display_heading_line(frame, steering_angle, line_color=(0, 0, 255), line_width=5 ):
+
+    heading_image = np.zeros_like(frame)
+    height, width, _ = frame.shape
+
+    steering_angle_radian = steering_angle / 180.0 * math.pi
+    x1 = int(width / 2)
+    y1 = height
+    x2 = int(x1 - height / 2 / math.tan(steering_angle_radian))
+    y2 = int(height / 2)
+
+    cv2.line(heading_image, (x1, y1), (x2, y2), line_color, line_width)
+
+    heading_image = cv2.addWeighted(frame, 0.8, heading_image, 1, 1)
+
+    return heading_image
+
+def get_steering_angle(frame, lane_lines):
+    height, width, _ = frame.shape
+
+    if len(lane_lines) == 2: # if two lane lines are detected
+        _, _, left_x2, _ = lane_lines[0][0] # extract left x2 from lane_lines array
+        _, _, right_x2, _ = lane_lines[1][0] # extract right x2 from lane_lines array
+        mid = int(width / 2)
+        x_offset = (left_x2 + right_x2) / 2 - mid
+        y_offset = int(height / 2)  
+ 
+    elif len(lane_lines) == 1: # if only one line is detected
+        x1, _, x2, _ = lane_lines[0][0]
+        x_offset = x2 - x1
+        y_offset = int(height / 2)
+
+    elif len(lane_lines) == 0: # if no line is detected
+        x_offset = 0
+        y_offset = int(height / 2)
+
+    angle_to_mid_radian = math.atan(x_offset / y_offset)
+    angle_to_mid_deg = int(angle_to_mid_radian * 180.0 / math.pi)  
+    steering_angle = angle_to_mid_deg + 90 
+
+    return steering_angle
+
+
+
+
 image = cv2.fastNlMeansDenoisingColored(image, None, 10, 10, 7, 21)
 image = cv2.GaussianBlur(image, (5,5), 0)
 imgBlank = np.zeros((240, 320, 3), np.uint8)
-utils.initializeTrackbars(count=3)
+utils.initializeTrackbars(count=6)
 
 
 
@@ -144,11 +193,14 @@ while 1:
     lines = detect_line_segments(crop)
     lane_lines = average_slope_intercept(image_copy, lines)
     lane_lines_image = display_lines(image_copy, lane_lines)
-    
+    steering_angle = get_steering_angle(image_copy, lane_lines)
+    print(steering_angle)
+    heading_image = display_heading_line(lane_lines_image,steering_angle)
+
     
     imgArray = [
                     [image, image_copy, filtered],
-                    [imgBlank, edges, crop]
+                    [heading_image, edges, crop]
                     ]
     
     
@@ -158,8 +210,7 @@ while 1:
 
     if cv2.waitKey(1) & 0xFF == ord('q'):
         break
-        
-        
+      
 
 cv2.waitKey(0)
 cv2.destroyAllWindows()
