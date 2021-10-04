@@ -1,6 +1,6 @@
 import cv2
 import utils
-import numpy as np
+import numpy as np 
 
 
 image = cv2.imread("img_reg_lurus.jpg")
