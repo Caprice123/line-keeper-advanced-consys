@@ -4,7 +4,7 @@ import numpy as np
 
 
 image = cv2.imread("img_reg_lurus.jpg")
-print(image)
+print(image.shape)
 def increase_brightness(img, value=100):
     hsv = cv2.cvtColor(img, cv2.COLOR_BGR2HSV)
     h, s, v = cv2.split(hsv)
