@@ -13,12 +13,6 @@ async def upload(file: UploadFile = File(...)):
     
     content = await file.read() # bytes
     
-    # f = open(f"fast_api_imgs/{file.filename}", "wb")
-    # f.write(content)
-    # f.close()
-    
-    
-    
     with open(f"fast_api_imgs/{file.filename}", "wb") as f:
         f.write(content)
     
