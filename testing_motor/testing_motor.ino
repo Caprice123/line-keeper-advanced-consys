@@ -17,7 +17,8 @@ const int CW  = 1; // do not change
 
 #define motor1 1 // do not change
 #define motor2 2 // do not change
-
+String incomingbyte;
+int duty;
 // for single motor
 //Robojax_L298N_DC_motor robot(IN1, IN2, ENA, CHA, true);  
 
@@ -36,38 +37,50 @@ void setup() {
 
 void loop() {
   
- // robot.demo(1);
-  robot.rotate(motor1, 80, CW);//run motor1 at 60% speed in CW direction
-  robot.rotate(motor2, 70, CW);//run motor1 at 60% speed in CW direction
-  
-  delay(3000);
+// // robot.demo(1);
+//  robot.rotate(motor1, 80, CW);//run motor1 at 80% speed in CW direction
+//  robot.rotate(motor2, 70, CW);//run motor2 at 70% speed in CW direction
+//  
+//  delay(3000);
+//
+//  robot.brake(1);
+//  robot.brake(2);  
+//  delay(2000);
 
-  robot.brake(1);
-  robot.brake(2);  
-  delay(2000);
-
-
-  robot.rotate(motor1, 100, CW);//run motor1 at 60% speed in CW direction
-  delay(3000);
-  
-  robot.rotate(motor2, 100, CW);//run motor1 at 60% speed in CW direction
-  
-  robot.brake(1);
-  robot.brake(2);   
-  delay(2000);  
-
-  for(int i=40; i<=100; i++)
-  {
-    robot.rotate(motor1, i, CW);// turn motor1 with i% speed in CW direction (whatever is i) 
-    robot.rotate(motor2, i, CW);// turn motor1 with i% speed in CW direction (whatever is i) 
-    delay(500);
-  }
-  delay(2000);
-  
-  robot.brake(1);
-  
-  robot.brake(2);
-  delay(2000);  
+//
+//  robot.rotate(motor1, 100, CW);//run motor1 at 100% speed in CW direction
+//  robot.rotate(motor2, 100, CW);//run motor2 at 100% speed in CW direction
+//  delay(3000);
+//  
+//  
+//  robot.brake(1);
+//  robot.brake(2);   
+//  delay(2000);  
+//
+//  for(int i=60; i<=100; i++)
+//  {
+//    robot.rotate(motor1, i, CW);// turn motor1 with i% speed in CW direction (whatever is i) 
+//    robot.rotate(motor2, i, CW);// turn motor2 with i% speed in CW direction (whatever is i) 
+//    delay(1000);
+      
+//  }
+    while (Serial.available()) {
+      char c = Serial.read();  //gets one byte from serial buffer
+      incomingbyte += c; //makes the string readString
+      delay(2);  //slow looping to allow buffer to fill with next character
+    }
+    duty = incomingbyte.toInt();
+    Serial.println(duty);
+    robot.rotate(motor1, duty, CW);// turn motor1 with i% speed in CW direction (whatever is i) 
+    robot.rotate(motor2, duty, CW);
+          
     
+//  delay(2000);
+//  
+//  robot.brake(1);
+//  
+//  robot.brake(2);
+//  delay(2000);  
+//    
   // Robojax L298N Library. Watch video instruciton https://youtu.be/2JTMqURJTwg
 }

@@ -19,11 +19,11 @@
 const char* ssid = "lantai 3";
 const char* password = "sisca123";
 
-String serverName = "192.168.100.108";   
+String response;
+String serverName = "192.168.1.11";   
 //String serverName = "example.com";   
 
 
-const char roomNumber = '1';
 String serverPath = "/upload";    // Flask upload route
 //String serverPath = "/upload";
 
@@ -133,7 +133,6 @@ void setup() {
 void loop() {
  unsigned long currentMillis = millis();
  if (currentMillis - previousMillis >= timerInterval) {
-     Serial.println("Sending Photo");
      sendPhoto();
      previousMillis = currentMillis;
    
@@ -154,6 +153,7 @@ void making_head_http(uint16_t length, String head){
 void making_body_http(camera_fb_t * fb){
    uint8_t *fbBuf = fb->buf;
    size_t fbLen = fb->len;
+   Serial.println("sending body");
    for (size_t n=0; n<fbLen; n=n+1024) {
      if (n+1024 < fbLen) {
        client.write(fbBuf, 1024);
@@ -181,7 +181,7 @@ void posting_image(camera_fb_t * fb){
    making_head_http(totalLen, head);
    making_body_http(fb);
    making_tail_http(tail);
-   Serial.print(totalLen);
+   Serial.println(totalLen);
 }
 
 String get_response_server(){
@@ -192,7 +192,7 @@ String get_response_server(){
    long startTimer = millis();
    boolean state = false;
 
-   
+   Serial.println("Getting response");
    while ((startTimer + timoutTimer) > 0) {
      Serial.print(".");
      delay(100);      
@@ -213,7 +213,7 @@ String get_response_server(){
 }
 
 String sendPhoto() {
- String response;
+ 
 
  camera_fb_t * fb = NULL;
  fb = esp_camera_fb_get();
@@ -223,8 +223,6 @@ String sendPhoto() {
    ESP.restart();
  }
  
- Serial.println("Connecting to server: " + serverName);
-
  if (client.connect(serverName.c_str(), serverPort)) {
    
    Serial.println("Connection successful!");    
@@ -235,50 +233,50 @@ String sendPhoto() {
 
    Serial.println();
    client.stop();
-   Serial.print(response);
+   Serial.println(response);
 
 
-   int steering_angle = response.toInt();
-
-
-   float lastTime = 0;
-   int lastError = 0;
-   int speed = 10;
-
-   int kd = 0;
-   int kp = 0;
-
-
-   unsigned long now = millis();
-   unsigned long dt = now - lastTime;
-   int deviation = steering_angle - 90;
-   int error = abs(deviation);
-
-
-   if (deviation < 5 && deviation > -5){
-      deviation = 0;
-      error = 0;
-      Serial.println("Lurus");
-   }
-   else if (deviation > 5){
-      Serial.println("Going right");
-   }
-   else if (deviation < -5){
-      Serial.println("Going left");
-   }
-
-
-   float derivative = kd * (error - lastError) / dt;
-   float proportional = kp * error;
-   int PD = (int) speed + derivative + proportional;
-   speed = abs(PD);
-
-
-   if (speed > 25){
-      speed = 25;
-   }
-   lastError = error;
-   lastTime = millis() / 1000;
+//   int steering_angle = response.toInt();
+//
+//
+//   float lastTime = 0;
+//   int lastError = 0;
+//   int speed = 10;
+//
+//   int kd = 0;
+//   int kp = 0;
+//
+//
+//   unsigned long now = millis();
+//   unsigned long dt = now - lastTime;
+//   int deviation = steering_angle - 90;
+//   int error = abs(deviation);
+//
+//
+//   if (deviation < 5 && deviation > -5){
+//      deviation = 0;
+//      error = 0;
+//      Serial.println("Lurus");
+//   }
+//   else if (deviation > 5){
+//      Serial.println("Going right");
+//   }
+//   else if (deviation < -5){
+//      Serial.println("Going left");
+//   }
+//
+//
+//   float derivative = kd * (error - lastError) / dt;
+//   float proportional = kp * error;
+//   int PD = (int) speed + derivative + proportional;
+//   speed = abs(PD);
+//
+//
+//   if (speed > 25){
+//      speed = 25;
+//   }
+//   lastError = error;
+//   lastTime = millis() / 1000;
  }
  else {
    response = "Connection to " + serverName +  " failed.";

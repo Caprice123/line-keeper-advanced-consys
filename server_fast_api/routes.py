@@ -2,24 +2,33 @@ from fastapi.datastructures import UploadFile
 from server_fast_api import app
 from fastapi import File, UploadFile
 import cv2
+from multiprocessing import Value
+from fastapi.responses import PlainTextResponse
 
+
+
+counter = Value('i', 0)
 
 @app.get("/")
 def index():
     return {"name": "First data"}
 
-@app.post("/upload")
+@app.post("/upload",response_class=PlainTextResponse)
 async def upload(file: UploadFile = File(...)):
     
+    with counter.get_lock():
+	    counter.value += 1
+	    count = counter.value
+  
     content = await file.read() # bytes
-    
-    with open(f"fast_api_imgs/{file.filename}", "wb") as f:
+    # print(content)
+    with open(f"testing/{file.filename}", "wb") as f:
         f.write(content)
     
-    img = cv2.imread(f"fast_api_imgs/{file.filename}")
-    print(img)
+    # img = cv2.imread(f"fast_api_imgs/{file.filename}")
+    # print(img)
     
-    return {"filename": file.filename}
+    return str(count)
 
 
 

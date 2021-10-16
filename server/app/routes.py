@@ -29,12 +29,12 @@ def upload():
 	img = None
 	if received.files:
 		print(received.files['file'])
-		# convert string of image data to uint8
-		file  = received.files['file']
-		nparr = np.fromstring(file.read(), np.uint8)
-		# decode image
-		img = cv2.imdecode(nparr, cv2.IMREAD_COLOR)
-		save_img(img)
+		# # convert string of image data to uint8
+		# file  = received.files['file']
+		# nparr = np.fromstring(file.read(), np.uint8)
+		# # decode image
+		# img = cv2.imdecode(nparr, cv2.IMREAD_COLOR)
+		# # save_img(img)
 
 		return "[SUCCESS] Image Received", 201
 	else:

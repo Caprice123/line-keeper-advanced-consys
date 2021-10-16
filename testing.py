@@ -1,9 +1,9 @@
 import os, requests
 from time import sleep
-url = 'http://127.0.0.1:8000/upload'
+url = 'http://192.168.1.11:80/upload'
 path_img = "C:\\Users\\kelvin\\Desktop\\tugas semester 5\\advance control system\\UAS line keeper\\line-keeper-advanced-consys\\img_reg_lurus.jpg"
 
-send_count = 1
+send_count = 10000
 
 def sendImage():
     with open(path_img, 'rb') as img:
@@ -12,8 +12,9 @@ def sendImage():
         files= {'file': (name_img,img,'multipart/form-data',{'Expires': '0'}) }
         with requests.Session() as s:
             r = s.post(url,files=files)
-            print(r.status_code)
+            print(r.json())
 
+sleep(1)
 for i in range(send_count):
     sendImage()
     sleep(0.1)
