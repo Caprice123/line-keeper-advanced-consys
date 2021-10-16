@@ -39,7 +39,7 @@ void receiveEvent(int howMany);
 void setup() {
   Serial.begin(115200);
   WireSlave.begin(SDA, SCL, I2C_SLAVE_ADDR);
-  robot.begin();
+  robot.begin()
   WireSlave.onReceive(receiveEvent);
 }
 
