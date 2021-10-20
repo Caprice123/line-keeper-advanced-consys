@@ -11,7 +11,7 @@ counter = Value('i', 0)
 
 
 def save_img(img):
-	img_dir = "esp32_imgs"
+	img_dir = "test_imgs"
  
  
 	with counter.get_lock():

@@ -7,3 +7,10 @@ no blur
 0 20 54
 72 255 168
 
+hasil cendra
+
+no blue no denoise
+30 20 54
+72 255 168
+
+nno denoise

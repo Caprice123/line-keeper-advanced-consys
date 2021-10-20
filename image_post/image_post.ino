@@ -113,10 +113,6 @@ void setting_camera_module(){
    delay(1000);
    ESP.restart();
  }
- sensor_t * s = esp_camera_sensor_get();
-            s->set_brightness(s, 2);     // -2 to 2
-            s->set_contrast(s, 0);       // -2 to 2
-            s->set_saturation(s, 0);     // -2 to 2
             
 }
 
