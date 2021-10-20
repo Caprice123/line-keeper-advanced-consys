@@ -20,7 +20,7 @@ const char* ssid = "lantai 3";
 const char* password = "sisca123";
 
 String response;
-String serverName = "192.168.100.102";   
+String serverName = "192.168.100.103";   
 //String serverName = "example.com";   
 
 
