@@ -13,4 +13,11 @@ no blue no denoise
 30 20 54
 72 255 168
 
-nno denoise
+
+with denoise with blur
+30 15 54
+72 255 255
+
+atau 
+30 10 54
+72 255 255
