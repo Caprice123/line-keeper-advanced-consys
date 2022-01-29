@@ -80,7 +80,7 @@ def nothing(x):
 
 def initializeTrackbars(intialTracbarVals=0, count=1):
     cv2.namedWindow("Trackbars")
-    cv2.resizeWindow("Trackbars", 360, 240)
+    cv2.resizeWindow("Trackbars", 540, 480)
     
     for cnt in range(count):
         
